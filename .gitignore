@@ -1,0 +1,4 @@
+*.pyc
+.cache
+doc/tags
+__pycache__

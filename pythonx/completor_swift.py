@@ -13,12 +13,11 @@ path = os.path.dirname(__file__)
 wrapper = os.path.join(path, '..', 'SourceKittenWrapper', '.build',
                        'release', 'SourceKittenWrapper')
 
-pat = re.compile('\.\s*(\w*)$', re.U)
+pat = re.compile('\w+$|\.\s*\w*$', re.U)
 
 
 class SourceKitten(Completor):
     filetype = 'swift'
-    trigger = r'[\w\)\]\}\'\"]+\.\w*$'
     daemon = True
     args_file = '.sourcekitten_complete'
 
@@ -35,7 +34,7 @@ class SourceKitten(Completor):
         else:
             file_args = self.parse_config(self.args_file)
             if file_args:
-                args.extend(['-compiler-args', file_args])
+                args.extend(['-compiler-args', ' '.join(file_args)])
         return args
 
     def offset(self):
@@ -43,12 +42,13 @@ class SourceKitten(Completor):
         line2byte = vim.Function('line2byte')
         return line2byte(line) + col - 1
 
-    def request(self):
+    def request(self, action=None):
         offset = self.offset() - 1
         match = pat.search(self.input_data)
-        if match:
-            start, end = match.span()
-            offset -= end - start - 2
+        if not match:
+            return ''
+        start, end = match.span()
+        offset -= end - start - 1
 
         return json.dumps({
             'content': '\n'.join(vim.current.buffer[:]),
@@ -60,7 +60,10 @@ class SourceKitten(Completor):
         prefix = ''
         match = pat.search(self.input_data)
         if match:
-            prefix, = match.groups()
+            prefix = match.group()
+
+        if prefix.startswith(b'.'):
+            prefix = prefix.strip(b'.')
 
         try:
             data = to_unicode(items[0], 'utf-8')

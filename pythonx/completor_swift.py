@@ -48,6 +48,13 @@ class SourceKitten(Completor):
         line2byte = vim.Function('line2byte')
         return line2byte(line) + col - 1
 
+    def start_column(self):
+        col = super(SourceKitten, self).start_column()
+        parts = self.input_data.rsplit()
+        if parts and b'.' in parts[-1]:
+            col -= 1
+        return col
+
     def request(self, action=None):
         offset = self.offset() - 1
         match = pat.search(self.input_data)

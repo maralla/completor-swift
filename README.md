@@ -20,3 +20,13 @@ To enable swift completion, swift3 should be installed. Then go to the root dire
 ```bash
 make
 ```
+
+Tips
+----
+
+Use `<TAB>` To jump to placeholder:
+
+```vim
+imap <buffer> <tab>  <Plug>CompletorSwiftJumpToPlaceholder
+map  <buffer> <tab>  <Plug>CompletorSwiftJumpToPlaceholder
+```

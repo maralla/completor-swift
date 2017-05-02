@@ -14,6 +14,12 @@ wrapper = os.path.join(path, '..', 'SourceKittenWrapper', '.build',
                        'release', 'SourceKittenWrapper')
 
 pat = re.compile('\w+$|\.\s*\w*$', re.U)
+placeholder = re.compile('<#T##([^#]+:\s*[^#]+##)?(?P<ty>[^#]+)#>', re.U)
+
+
+def replace(match):
+    matches = match.groupdict()
+    return '<#{}#>'.format(matches['ty']) if 'ty' in matches else ''
 
 
 class SourceKitten(Completor):
@@ -68,8 +74,10 @@ class SourceKitten(Completor):
         try:
             data = to_unicode(items[0], 'utf-8')
             for item in json.loads(data):
-                if not item[b'word'].startswith(prefix):
+                if not item[b'abbr'].startswith(prefix):
                     continue
+                item[b'word'] = placeholder.sub(
+                    replace, to_unicode(item[b'word'], 'utf-8'))
                 item[b'menu'] = item[b'menu'].replace(
                     'source.lang.swift.decl.', '')
                 res.append(item)

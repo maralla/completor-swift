@@ -51,7 +51,7 @@ class SourceKitten(Completor):
     def start_column(self):
         col = super(SourceKitten, self).start_column()
         parts = self.input_data.rsplit()
-        if parts and b'.' in parts[-1]:
+        if parts and '.' in parts[-1]:
             col -= 1
         return col
 
@@ -75,17 +75,17 @@ class SourceKitten(Completor):
         if match:
             prefix = match.group()
 
-        if prefix.startswith(b'.'):
-            prefix = prefix.strip(b'.')
+        if prefix.startswith('.'):
+            prefix = prefix.strip('.')
 
         try:
             data = to_unicode(items[0], 'utf-8')
             for item in json.loads(data):
-                if not item[b'abbr'].startswith(prefix):
+                if not item['abbr'].startswith(prefix):
                     continue
-                item[b'word'] = placeholder.sub(
-                    replace, to_unicode(item[b'word'], 'utf-8'))
-                item[b'menu'] = item[b'menu'].replace(
+                item['word'] = placeholder.sub(
+                    replace, to_unicode(item['word'], 'utf-8'))
+                item['menu'] = item['menu'].replace(
                     'source.lang.swift.decl.', '')
                 res.append(item)
             return res

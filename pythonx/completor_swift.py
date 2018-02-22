@@ -3,9 +3,8 @@
 import re
 import json
 import os.path
-import vim
 
-from completor import Completor
+from completor import Completor, vim
 from completor.compat import to_unicode
 
 path = os.path.dirname(__file__)

@@ -22,7 +22,10 @@ function! s:jump_to_placeholder()
     let range_cmd .= "\<ESC>"
   endif
 
-  let range_cmd .= 'v'.lnum.'G'.end.'|o'.lnum.'G'.start."|o\<C-G>"
+  let screen_start = virtcol([lnum, start])
+  let screen_end = virtcol([lnum, end])
+
+  let range_cmd .= 'v'.lnum.'G'.screen_end.'|o'.lnum.'G'.screen_start."|o\<C-G>"
   call feedkeys(range_cmd)
   return ''
 endfunction

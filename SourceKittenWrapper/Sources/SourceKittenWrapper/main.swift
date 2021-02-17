@@ -24,8 +24,8 @@ let path = "\(NSUUID().uuidString).swift"
 var args: [String]
 
 if spmModule.isEmpty {
-    args = ["-c", path] + compilerArgs.characters.split(separator: " ").map(String.init)
-    if args.index(of: "-sdk") == nil {
+    args = ["-c", path] + compilerArgs.split(separator: " ").map(String.init)
+    if args.firstIndex(of: "-sdk") == nil {
         args.append(contentsOf: ["-sdk", sdkPath()])
     }
 } else {
@@ -71,8 +71,8 @@ while true {
     guard let (content, offset) = parseInput(input) else {
         continue
     }
-    let request = Request.codeCompletionRequest(file: path, contents: content, offset: offset, arguments: args)
-    let items = CodeCompletionItem.parse(response: request.send()).map {
+    let request = Request.codeCompletionRequest(file: path, contents: content, offset: ByteCount(offset), arguments: args)
+    let items = CodeCompletionItem.parse(response: try request.send()).map {
         ["abbr": $0.descriptionKey, "menu": $0.kind, "word": $0.sourcetext]
     }
     var data = toJson(items)

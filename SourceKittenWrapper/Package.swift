@@ -1,8 +1,15 @@
+// swift-tools-version:5.3
+
 import PackageDescription
 
 let package = Package(
     name: "SourceKittenWrapper",
     dependencies: [
-        .Package(url: "https://github.com/jpsim/SourceKitten.git", Version(0, 18, 1))
+        .package(name: "SourceKitten", url: "git@github.com:jpsim/SourceKitten.git", .upToNextMinor(from: .init(0, 31, 0)))
+    ],
+    targets: [
+        .target(name: "SourceKittenWrapper",
+                dependencies: [.product(name: "SourceKittenFramework", package: "SourceKitten")]
+        )
     ]
 )

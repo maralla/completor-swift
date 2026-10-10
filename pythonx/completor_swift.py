@@ -12,8 +12,8 @@ path = os.path.dirname(__file__)
 wrapper = os.path.join(path, '..', 'SourceKittenWrapper', '.build',
                        'release', 'SourceKittenWrapper')
 
-pat = re.compile('\w+$|\.\s*\w*$', re.U)
-placeholder = re.compile('<#T##([^#]+:\s*[^#]+##)?(?P<ty>[^#]+)#>', re.U)
+pat = re.compile(r'\w+$|\.\s*\w*$', re.U)
+placeholder = re.compile(r'<#T##([^#]+:\s*[^#]+##)?(?P<ty>[^#]+)#>', re.U)
 
 
 def replace(match):
